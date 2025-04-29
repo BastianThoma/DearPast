@@ -17,16 +17,16 @@
   import { db, auth } from '@/firebase/config'
   import MemoryCard from '@/components/MemoryCard.vue'
   
-  const memories = ref([])
-  const loading = ref(true)
+  let memories = ref([])
+  let loading = ref(true)
   
-  const fetchMemories = async () => {
+  let fetchMemories = async () => {
     if (!auth.currentUser) return
   
-    const colRef = collection(db, 'users', auth.currentUser.uid, 'memories')
-    const q = query(colRef, orderBy('createdAt', 'desc'))
+    let colRef = collection(db, 'users', auth.currentUser.uid, 'memories')
+    let q = query(colRef, orderBy('createdAt', 'desc'))
   
-    const snapshot = await getDocs(q)
+    let snapshot = await getDocs(q)
     memories.value = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()

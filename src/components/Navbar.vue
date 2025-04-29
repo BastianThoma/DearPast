@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-white shadow-md mb-6">
+  <nav class="fixed top-0 w-full bg-white shadow-md mb-6">
     <div class="flex items-center justify-between p-4">
       <RouterLink to="/" class="text-xl font-bold text-purple-600">DearPast</RouterLink>
 

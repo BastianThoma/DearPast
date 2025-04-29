@@ -21,13 +21,13 @@
   <script setup>
   import { defineProps, defineEmits } from 'vue'
   
-  const props = defineProps({
+  let props = defineProps({
     modelValue: String
   })
   
-  const emit = defineEmits(['update:modelValue'])
+  let emit = defineEmits(['update:modelValue'])
   
-  const moods = [
+  let moods = [
     { label: 'Glücklich', icon: '😊', value: 'happy' },
     { label: 'Traurig', icon: '😢', value: 'sad' },
     { label: 'Wütend', icon: '😠', value: 'angry' },
@@ -35,7 +35,7 @@
     { label: 'Nachdenklich', icon: '🤔', value: 'thoughtful' },
   ]
   
-  const selectedMood = computed(() => props.modelValue)
+  let selectedMood = computed(() => props.modelValue)
   
   function selectMood(value) {
     emit('update:modelValue', value)

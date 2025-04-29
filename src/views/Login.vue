@@ -2,8 +2,8 @@
     <div class="max-w-md mx-auto p-6">
       <h2 class="text-xl font-bold mb-4">Login</h2>
       <form @submit.prevent="handleLogin" class="space-y-4">
-        <input v-model="email" type="email" class="input" placeholder="E-Mail" />
-        <input v-model="password" type="password" class="input" placeholder="Passwort" />
+        <input v-model="email" type="email" class="input text-purple-700 placeholder:text-purple-400" placeholder="E-Mail" />
+        <input v-model="password" type="password" class="input text-purple-700 placeholder:text-purple-400" placeholder="Passwort" />
         <button type="submit" class="btn">Einloggen</button>
       </form>
     </div>
