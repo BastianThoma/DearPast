@@ -6,18 +6,17 @@
       <!-- Hamburger Icon -->
       <button @click="isOpen = !isOpen" class="md:hidden text-gray-700 focus:outline-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
 
       <!-- Desktop Menu -->
       <div class="hidden md:flex items-center gap-4 text-sm">
-        <RouterLink to="/memories" class="link">Meine Erinnerungen</RouterLink>
-        <RouterLink to="/add" class="link">Neue Erinnerung</RouterLink>
-        <RouterLink to="/random" class="link">Zufällig</RouterLink>
 
         <template v-if="user">
+          <RouterLink to="/memories" class="link">Meine Erinnerungen</RouterLink>
+          <RouterLink to="/add" class="link">Neue Erinnerung</RouterLink>
+          <RouterLink to="/random" class="link">Zufällig</RouterLink>
           <span class="text-gray-500">Hi, {{ user.email }}</span>
           <button @click="handleLogout" class="text-red-500 underline">Logout</button>
         </template>

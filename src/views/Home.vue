@@ -5,7 +5,6 @@
   
       <div class="flex justify-center gap-4">
         <RouterLink to="/register" class="btn">Jetzt starten</RouterLink>
-        <RouterLink to="/random" class="btn-secondary">Zufällige Erinnerung</RouterLink>
       </div>
     </div>
   </template>

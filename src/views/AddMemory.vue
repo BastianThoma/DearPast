@@ -12,8 +12,9 @@
           <option disabled value="" class="text-purple-400">Wähle eine Stimmung</option>
           <option value="happy" class="text-purple-400">😊 Glücklich</option>
           <option value="sad" class="text-purple-400">😢 Traurig</option>
-          <option value="grateful" class="text-purple-400">🙏 Dankbar</option>
-          <option value="nostalgic" class="text-purple-400">📸 Nostalgisch</option>
+          <option value="angry" class="text-purple-400">😠 Wütend</option>
+          <option value="surprised" class="text-purple-400">😮 Überrascht</option>
+          <option value="thoughtful" class="text-purple-400">🤔 Nachdenklich</option>
         </select>
   
         <button type="submit" class="btn">Speichern</button>
