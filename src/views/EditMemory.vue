@@ -63,7 +63,7 @@ const handleUpdate = async () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 .input {
   @apply w-full border rounded p-2;
 }

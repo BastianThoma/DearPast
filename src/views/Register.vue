@@ -29,7 +29,7 @@
   }
   </script>
   
-  <style scoped>
+  <style scoped lang="postcss">
   .input {
     @apply block w-full border p-2 mb-2 rounded;
   }

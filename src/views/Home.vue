@@ -9,7 +9,7 @@
     </div>
   </template>
   
-  <style scoped>
+  <style scoped lang="postcss">
   .btn {
     @apply bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700;
   }

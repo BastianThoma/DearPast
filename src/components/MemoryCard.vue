@@ -16,9 +16,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { updateDoc, doc } from 'firebase/firestore';
-import { db } from '@/firebase/config';
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -68,38 +66,9 @@ let moodIcon = computed(() => {
   return mood ? mood.icon : '❓';
 });
 
-let isModalOpen = ref(false);
-let editedMemory = ref({ ...props.memory });
-
-let saveEdit = async () => {
-  try {
-    if (!props.memory.userId || !props.memory.id) {
-      console.error('Fehlende Daten in memory:', props.memory);
-      alert('Fehler: Ungültige Daten.');
-      return;
-    }
-
-    let docRef = doc(db, 'users', props.memory.userId, 'memories', props.memory.id);
-    await updateDoc(docRef, {
-      title: editedMemory.value.title,
-      text: editedMemory.value.text,
-      mood: editedMemory.value.mood,
-    });
-
-    isModalOpen.value = false;
-    alert('Änderungen erfolgreich gespeichert!');
-
-    if (props.onSave) {
-      props.onSave();
-    }
-  } catch (error) {
-    console.error('Fehler beim Speichern:', error);
-    alert('Fehler beim Speichern. Bitte erneut versuchen.');
-  }
-};
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 .btn {
   @apply bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700;
 }
