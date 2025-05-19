@@ -1,7 +1,7 @@
 <template>
-  <nav class="fixed top-0 w-full bg-white shadow-md mb-6">
+  <nav class="fixed top-0 w-full bg-gradient-to-br from-gray-800 to-gray-900 shadow-md mb-6">
     <div class="flex items-center justify-between p-4">
-      <RouterLink to="/" class="text-xl font-bold text-purple-600">DearPast</RouterLink>
+      <RouterLink to="/" class="text-xl font-bold text-[#9A5939]">DearPast</RouterLink>
 
       <!-- Hamburger Icon -->
       <button @click="isOpen = !isOpen" class="md:hidden text-gray-700 focus:outline-none">

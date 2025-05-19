@@ -7,7 +7,9 @@
       Bearbeiten
     </button>
 
-    <button @click="confirmDelete" class="btn bg-red-600 absolute bottom-4 right-4 border-2 text-white">
+    <button @click="confirmDelete"
+      class="btn bg-gradient-to-br from-gray-800 to-gray-900 shadow-md absolute bottom-4 right-4 border-2"
+      :class="moodClass">
       Löschen
     </button>
 
