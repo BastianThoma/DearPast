@@ -14,7 +14,7 @@ const routes = [
   { path: '/login', name: 'Login', component: Login, meta: { requiresGuest: true } },
   { path: '/register', name: 'Register', component: Register, meta: { requiresGuest: true } },
   { path: '/add', name: 'AddMemory', component: AddMemory, meta: { requiresAuth: true } },
-  { path: '/edit', name: 'EditMemory', component: EditMemory, meta: { requiresAuth: true } },
+  { path: '/edit/:id', name: 'edit-memory', component: EditMemory, meta: { requiresAuth: true } },
   { path: '/random', name: 'RandomMemory', component: RandomMemory, meta: { requiresAuth: true } },
   { path: '/memories', name: 'Memories', component: Memories, meta: { requiresAuth: true } },
 ]

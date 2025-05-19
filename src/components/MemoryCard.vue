@@ -44,11 +44,8 @@ const router = useRouter()
 const editMemory = () => {
   router.push({
     name: 'edit-memory',
-    query: {
+    params: {
       id: props.memory.id,
-      title: props.memory.title,
-      text: props.memory.text,
-      mood: props.memory.mood,
     },
   })
 }

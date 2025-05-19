@@ -25,7 +25,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db, auth } from '@/firebase/config';
 
 const route = useRoute();
@@ -34,33 +34,33 @@ const router = useRouter();
 const title = ref('');
 const text = ref('');
 const mood = ref('');
-const memoryId = ref('');
+const memoryId = ref(route.params.id);
 
-onMounted(() => {
-  title.value = route.query.title || '';
-  text.value = route.query.text || '';
-  mood.value = route.query.mood || '';
-  memoryId.value = route.query.id || '';
-});
-
-const handleUpdate = async () => {
-  if (!auth.currentUser) return alert('Nicht eingeloggt');
+onMounted(async () => {
+  if (!auth.currentUser) {
+    alert('Nicht eingeloggt');
+    return router.push('/login');
+  }
 
   try {
     const docRef = doc(db, 'users', auth.currentUser.uid, 'memories', memoryId.value);
-    await updateDoc(docRef, {
-      title: title.value,
-      text: text.value,
-      mood: mood.value,
-    });
+    const snapshot = await getDoc(docRef);
 
-    alert('Erinnerung erfolgreich aktualisiert!');
-    router.push('/memories');
+    if (!snapshot.exists()) {
+      alert('Erinnerung nicht gefunden.');
+      return router.push('/memories');
+    }
+
+    const data = snapshot.data();
+    title.value = data.title;
+    text.value = data.text;
+    mood.value = data.mood;
   } catch (err) {
-    console.error('Update-Fehler:', err);
-    alert('Fehler beim Speichern. Bitte erneut versuchen.');
+    console.error('Fehler beim Laden:', err);
+    alert('Fehler beim Laden der Erinnerung.');
+    router.push('/memories');
   }
-};
+});
 </script>
 
 <style scoped lang="postcss">
