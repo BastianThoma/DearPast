@@ -2,13 +2,23 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
 import App from './App.vue'
 import router from './router'
 
-const app = createApp(App)
+import { auth } from './firebase/config'
+import { useAuthStore } from './stores/auth'
 
-app.use(createPinia())
-app.use(router)
+const pinia = createPinia()
+let app: ReturnType<typeof createApp> | null = null
 
-app.mount('#app')
+auth.onAuthStateChanged((user) => {
+  const authStore = useAuthStore()
+  authStore.setUser(user)
+
+  if (!app) {
+    app = createApp(App)
+    app.use(pinia)
+    app.use(router)
+    app.mount('#app')
+  }
+})
