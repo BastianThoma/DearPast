@@ -1,40 +1,68 @@
 <template>
-    <div class="max-w-md mx-auto p-4">
-      <h2 class="text-xl font-semibold mb-4">Registrieren</h2>
-      <form @submit.prevent="handleRegister">
-        <input v-model="email" type="email" placeholder="Email" class="input" />
-        <input v-model="password" type="password" placeholder="Passwort" class="input" />
-        <button type="submit" class="btn">Registrieren</button>
-      </form>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue'
-  import { createUserWithEmailAndPassword } from 'firebase/auth'
-  import { auth } from '@/firebase/config'
-  import { useRouter } from 'vue-router'
-  
-  let email = ref('')
-  let password = ref('')
-  let router = useRouter()
-  
-  let handleRegister = async () => {
-    try {
-      await createUserWithEmailAndPassword(auth, email.value, password.value)
-      router.push('/memories')
-    } catch (err) {
-      console.error(err.message)
-    }
+  <div class="max-w-md mx-auto p-4">
+    <h2 class="text-xl font-semibold mb-4">Registrieren</h2>
+    <form @submit.prevent="handleRegister">
+      <input v-model="username" name="username" type="text" pattern="[a-zA-Z0-9]*" placeholder="Username" required
+        class="input bg-[#303030]" autocomplete="off" />
+      <input v-model="email" name="email" type="email" placeholder="Email" required class="input bg-[#303030]"
+        autocomplete="email" />
+      <input v-model="password" name="password" type="password" placeholder="Passwort" required
+        class="input bg-[#303030]" autocomplete="new-password" />
+      <button type="submit" class="btn">Registrieren</button>
+    </form>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { auth } from '@/firebase/config'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
+let authStore = useAuthStore()
+let username = ref('')
+let email = ref('')
+let password = ref('')
+let router = useRouter()
+
+let handleRegister = async () => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
+
+    await updateProfile(userCredential.user, {
+      displayName: username.value
+    })
+
+    await auth.currentUser.reload()
+
+    authStore.setUser(auth.currentUser)
+
+    router.push('/memories')
+  } catch (err) {
+    console.error(err.message)
   }
-  </script>
-  
-  <style scoped lang="postcss">
-  .input {
-    @apply block w-full border p-2 mb-2 rounded;
-  }
-  .btn {
-    @apply bg-blue-500 text-white px-4 py-2 rounded;
-  }
-  </style>
-  
+}
+</script>
+
+<style scoped lang="postcss">
+.input {
+  @apply block w-full border p-2 mb-2 rounded;
+}
+
+.btn {
+  @apply px-4 py-2 border rounded bg-gradient-to-br from-gray-800 to-gray-900 shadow-md text-purple-500 hover:text-purple-700 hover:from-gray-900 hover:to-gray-800;
+}
+</style>
+
+<style lang="css">
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #303030 inset !important;
+  -webkit-text-fill-color: #e5e7eb !important;
+  /* text-gray-200 */
+  transition: background-color 5000s ease-in-out 0s;
+}
+</style>

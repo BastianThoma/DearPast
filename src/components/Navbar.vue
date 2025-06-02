@@ -1,7 +1,9 @@
 <template>
-  <nav class="fixed top-0 w-full bg-gradient-to-br from-gray-800 to-gray-900 shadow-md mb-6">
+  <nav class="fixed z-10 top-0 w-full bg-gradient-to-br from-gray-800 to-gray-900 shadow-md mb-6">
     <div class="flex items-center justify-between p-4">
-      <RouterLink to="/" class="text-xl font-bold text-[#9A5939]">DearPast</RouterLink>
+      <RouterLink to="/" class="flex items-center">
+        <img src="@/assets/img/DearPastLogoNew.png" alt="DearPast Logo" class="h-auto w-36" />
+      </RouterLink>
 
       <!-- Hamburger Icon -->
       <button @click="isOpen = !isOpen" class="md:hidden text-gray-700 focus:outline-none">
@@ -17,8 +19,8 @@
           <RouterLink to="/memories" class="link">Meine Erinnerungen</RouterLink>
           <RouterLink to="/add" class="link">Neue Erinnerung</RouterLink>
           <RouterLink to="/random" class="link">Zufällig</RouterLink>
-          <span class="text-gray-500">Hi, {{ user.email }}</span>
-          <button @click="handleLogout" class="text-red-500 underline">Logout</button>
+          <span class="text-gray-300">Hi, {{ user.displayName }}</span>
+          <button @click="handleLogout" class="text-red-500 hover:text-green-600">Logout</button>
         </template>
         <template v-else>
           <RouterLink to="/login" class="link">Login</RouterLink>
@@ -34,8 +36,8 @@
       <RouterLink to="/random" class="link">Zufällig</RouterLink>
 
       <template v-if="user">
-        <span class="text-gray-500">Hi, {{ user.email }}</span>
-        <button @click="handleLogout" class="text-red-500 underline">Logout</button>
+        <span class="text-gray-300">Hi, {{ user.displayName }}</span>
+        <button @click="handleLogout" class="text-red-500 hover:text-green-600">Logout</button>
       </template>
       <template v-else>
         <RouterLink to="/login" class="link">Login</RouterLink>
@@ -46,20 +48,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { onAuthStateChanged, signOut } from 'firebase/auth'
-import { auth } from '@/firebase/config'
+import { computed, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import { signOut } from 'firebase/auth'
+import { auth } from '@/firebase/config'
 
-const user = ref(null)
-const isOpen = ref(false)
+const authStore = useAuthStore()
 const router = useRouter()
+const isOpen = ref(false)
 
-onMounted(() => {
-  onAuthStateChanged(auth, currentUser => {
-    user.value = currentUser
-  })
-})
+const user = computed(() => authStore.user)
 
 const handleLogout = async () => {
   await signOut(auth)
@@ -69,6 +68,6 @@ const handleLogout = async () => {
 
 <style scoped lang="postcss">
 .link {
-  @apply text-gray-700 hover:underline;
+  @apply text-gray-500 hover:text-purple-500;
 }
 </style>

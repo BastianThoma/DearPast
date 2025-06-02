@@ -6,17 +6,26 @@ import router from './router'
 import { auth } from './firebase/config'
 import { useAuthStore } from './stores/auth'
 
-const app = createApp(App)
-const pinia = createPinia()
+async function initApp() {
+  const app = createApp(App)
+  const pinia = createPinia()
 
-app.use(pinia)
-app.use(router)
+  app.use(pinia)
+  app.use(router)
 
-router.isReady().then(() => {
+  await router.isReady()
+
   const authStore = useAuthStore()
-  auth.onAuthStateChanged((user) => {
-    authStore.setUser(user)
+
+  await new Promise<void>((resolve) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      authStore.setUser(user)
+      unsubscribe()
+      resolve()
+    })
   })
 
   app.mount('#app')
-})
+}
+
+initApp()
