@@ -62,6 +62,7 @@ const user = computed(() => authStore.user)
 
 const handleLogout = async () => {
   await signOut(auth)
+  authStore.setUser(null) // Store leeren für Navbar-Update
   router.push('/login')
 }
 </script>

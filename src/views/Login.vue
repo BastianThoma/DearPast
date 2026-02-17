@@ -33,6 +33,7 @@ import { ref } from 'vue'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '@/firebase/config'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import { useToast } from '@/composables/useToast'
 import { useFirebaseError } from '@/composables/useFirebaseError'
 import { useFormValidation, useFieldValidation } from '@/composables/useFormValidation'
@@ -41,6 +42,7 @@ const email = ref('')
 const password = ref('')
 const isSubmitting = ref(false)
 const router = useRouter()
+const authStore = useAuthStore()
 const { showSuccess } = useToast()
 const { handleFirebaseError } = useFirebaseError()
 const { validateEmail, validateRequired } = useFormValidation()
@@ -103,6 +105,10 @@ const handleLogin = async () => {
 
   try {
     await signInWithEmailAndPassword(auth, email.value, password.value)
+
+    // Update Pinia Store für Navbar-Reaktivität
+    authStore.setUser(auth.currentUser)
+
     showSuccess('Erfolgreich eingeloggt! 🎉')
     router.push('/memories')
   } catch (err) {
