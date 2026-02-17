@@ -3,39 +3,25 @@
     <h2 class="text-xl font-bold mb-4">Login</h2>
     <form @submit.prevent="handleLogin" class="space-y-4">
       <div>
-        <input 
-          v-model="email" 
-          @blur="validateEmailField"
-          type="email" 
+        <input v-model="email" @blur="validateEmailField" type="email"
           class="input bg-[#303030] text-gray-200 placeholder:text-gray-500"
-          :class="{ 'border-red-500': hasError('email') && isTouched('email') }"
-          placeholder="E-Mail" 
-        />
+          :class="{ 'border-red-500': hasError('email') && isTouched('email') }" placeholder="E-Mail" />
         <p v-if="hasError('email') && isTouched('email')" class="text-red-500 text-sm mt-1">
           {{ getError('email') }}
         </p>
       </div>
-      
+
       <div>
-        <input 
-          v-model="password" 
-          @blur="validatePasswordField"
-          type="password" 
+        <input v-model="password" @blur="validatePasswordField" type="password"
           class="input bg-[#303030] text-gray-200 placeholder:text-gray-500"
-          :class="{ 'border-red-500': hasError('password') && isTouched('password') }"
-          placeholder="Passwort" 
-        />
+          :class="{ 'border-red-500': hasError('password') && isTouched('password') }" placeholder="Passwort" />
         <p v-if="hasError('password') && isTouched('password')" class="text-red-500 text-sm mt-1">
           {{ getError('password') }}
         </p>
       </div>
-      
-      <button 
-        type="submit" 
-        class="btn w-full"
-        :disabled="!isValid || isSubmitting"
-        :class="{ 'opacity-50 cursor-not-allowed': !isValid || isSubmitting }"
-      >
+
+      <button type="submit" class="btn w-full" :disabled="!isValid || isSubmitting"
+        :class="{ 'opacity-50 cursor-not-allowed': !isValid || isSubmitting }">
         {{ isSubmitting ? 'Wird eingeloggt...' : 'Einloggen' }}
       </button>
     </form>
@@ -65,17 +51,17 @@ const { setError, clearError, hasError, getError, isTouched, setTouched, isValid
  */
 const validateEmailField = () => {
   setTouched('email')
-  
+
   if (!validateRequired(email.value)) {
     setError('email', 'E-Mail ist erforderlich')
     return false
   }
-  
+
   if (!validateEmail(email.value)) {
     setError('email', 'Ungültige E-Mail-Adresse')
     return false
   }
-  
+
   clearError('email')
   return true
 }
@@ -85,12 +71,12 @@ const validateEmailField = () => {
  */
 const validatePasswordField = () => {
   setTouched('password')
-  
+
   if (!validateRequired(password.value)) {
     setError('password', 'Passwort ist erforderlich')
     return false
   }
-  
+
   clearError('password')
   return true
 }
@@ -108,13 +94,13 @@ const handleLogin = async () => {
   // Touch alle Fields für Error-Anzeige
   setTouched('email')
   setTouched('password')
-  
+
   if (!validateForm()) {
     return
   }
-  
+
   isSubmitting.value = true
-  
+
   try {
     await signInWithEmailAndPassword(auth, email.value, password.value)
     showSuccess('Erfolgreich eingeloggt! 🎉')

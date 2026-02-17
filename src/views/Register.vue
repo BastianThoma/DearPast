@@ -3,59 +3,34 @@
     <h2 class="text-xl font-semibold mb-4">Registrieren</h2>
     <form @submit.prevent="handleRegister" class="space-y-4">
       <div>
-        <input 
-          v-model="username" 
-          @blur="validateUsernameField"
-          name="username" 
-          type="text" 
-          placeholder="Username (min. 3 Zeichen)" 
-          class="input bg-[#303030]" 
-          :class="{ 'border-red-500': hasError('username') && isTouched('username') }"
-          autocomplete="off" 
-        />
+        <input v-model="username" @blur="validateUsernameField" name="username" type="text"
+          placeholder="Username (min. 3 Zeichen)" class="input bg-[#303030]"
+          :class="{ 'border-red-500': hasError('username') && isTouched('username') }" autocomplete="off" />
         <p v-if="hasError('username') && isTouched('username')" class="text-red-500 text-sm mt-1">
           {{ getError('username') }}
         </p>
       </div>
-      
+
       <div>
-        <input 
-          v-model="email" 
-          @blur="validateEmailField"
-          name="email" 
-          type="email" 
-          placeholder="Email" 
-          class="input bg-[#303030]"
-          :class="{ 'border-red-500': hasError('email') && isTouched('email') }"
-          autocomplete="email" 
-        />
+        <input v-model="email" @blur="validateEmailField" name="email" type="email" placeholder="Email"
+          class="input bg-[#303030]" :class="{ 'border-red-500': hasError('email') && isTouched('email') }"
+          autocomplete="email" />
         <p v-if="hasError('email') && isTouched('email')" class="text-red-500 text-sm mt-1">
           {{ getError('email') }}
         </p>
       </div>
-      
+
       <div>
-        <input 
-          v-model="password" 
-          @blur="validatePasswordField"
-          name="password" 
-          type="password" 
-          placeholder="Passwort (min. 6 Zeichen)" 
-          class="input bg-[#303030]"
-          :class="{ 'border-red-500': hasError('password') && isTouched('password') }"
-          autocomplete="new-password" 
-        />
+        <input v-model="password" @blur="validatePasswordField" name="password" type="password"
+          placeholder="Passwort (min. 6 Zeichen)" class="input bg-[#303030]"
+          :class="{ 'border-red-500': hasError('password') && isTouched('password') }" autocomplete="new-password" />
         <p v-if="hasError('password') && isTouched('password')" class="text-red-500 text-sm mt-1">
           {{ getError('password') }}
         </p>
       </div>
-      
-      <button 
-        type="submit" 
-        class="btn w-full"
-        :disabled="!isValid || isSubmitting"
-        :class="{ 'opacity-50 cursor-not-allowed': !isValid || isSubmitting }"
-      >
+
+      <button type="submit" class="btn w-full" :disabled="!isValid || isSubmitting"
+        :class="{ 'opacity-50 cursor-not-allowed': !isValid || isSubmitting }">
         {{ isSubmitting ? 'Wird registriert...' : 'Registrieren' }}
       </button>
     </form>
@@ -88,17 +63,17 @@ const { setError, clearError, hasError, getError, isTouched, setTouched, isValid
  */
 const validateUsernameField = () => {
   setTouched('username')
-  
+
   if (!validateRequired(username.value)) {
     setError('username', 'Username ist erforderlich')
     return false
   }
-  
+
   if (!validateUsername(username.value)) {
     setError('username', 'Username muss mindestens 3 Zeichen lang sein (nur Buchstaben & Zahlen)')
     return false
   }
-  
+
   clearError('username')
   return true
 }
@@ -108,17 +83,17 @@ const validateUsernameField = () => {
  */
 const validateEmailField = () => {
   setTouched('email')
-  
+
   if (!validateRequired(email.value)) {
     setError('email', 'E-Mail ist erforderlich')
     return false
   }
-  
+
   if (!validateEmail(email.value)) {
     setError('email', 'Ungültige E-Mail-Adresse')
     return false
   }
-  
+
   clearError('email')
   return true
 }
@@ -128,17 +103,17 @@ const validateEmailField = () => {
  */
 const validatePasswordField = () => {
   setTouched('password')
-  
+
   if (!validateRequired(password.value)) {
     setError('password', 'Passwort ist erforderlich')
     return false
   }
-  
+
   if (!validatePassword(password.value)) {
     setError('password', 'Passwort muss mindestens 6 Zeichen haben')
     return false
   }
-  
+
   clearError('password')
   return true
 }
@@ -158,13 +133,13 @@ const handleRegister = async () => {
   setTouched('username')
   setTouched('email')
   setTouched('password')
-  
+
   if (!validateForm()) {
     return
   }
-  
+
   isSubmitting.value = true
-  
+
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
 
