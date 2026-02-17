@@ -23,14 +23,14 @@ export function useFirebaseError() {
       'auth/invalid-credential': 'Ungültige Anmeldedaten',
       'auth/too-many-requests': 'Zu viele Versuche. Bitte warte kurz und versuche es erneut',
       'auth/network-request-failed': 'Netzwerkfehler. Prüfe deine Internetverbindung',
-      
+
       // Firestore Errors
       'permission-denied': 'Keine Berechtigung für diese Aktion',
       'not-found': 'Ressource nicht gefunden',
       'already-exists': 'Eintrag existiert bereits',
       'resource-exhausted': 'Zu viele Anfragen. Bitte warte kurz',
-      'unauthenticated': 'Du musst eingeloggt sein',
-      'unavailable': 'Service vorübergehend nicht verfügbar',
+      unauthenticated: 'Du musst eingeloggt sein',
+      unavailable: 'Service vorübergehend nicht verfügbar',
     }
 
     return errorMessages[errorCode] || 'Ein unerwarteter Fehler ist aufgetreten'
@@ -43,7 +43,7 @@ export function useFirebaseError() {
     console.error('Firebase Error:', error)
 
     let message = customMessage || getErrorMessage(error.code)
-    
+
     // Fallback für unbekannte Errors
     if (!error.code && error.message) {
       message = error.message
