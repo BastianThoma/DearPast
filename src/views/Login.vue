@@ -16,17 +16,22 @@ import { ref } from 'vue'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '@/firebase/config'
 import { useRouter } from 'vue-router'
+import { useToast } from '@/composables/useToast'
+import { useFirebaseError } from '@/composables/useFirebaseError'
 
-let email = ref('')
-let password = ref('')
-let router = useRouter()
+const email = ref('')
+const password = ref('')
+const router = useRouter()
+const { showSuccess } = useToast()
+const { handleFirebaseError } = useFirebaseError()
 
-let handleLogin = async () => {
+const handleLogin = async () => {
   try {
     await signInWithEmailAndPassword(auth, email.value, password.value)
+    showSuccess('Erfolgreich eingeloggt! 🎉')
     router.push('/memories')
   } catch (err) {
-    alert('Login fehlgeschlagen 😢\n' + err.message)
+    handleFirebaseError(err, 'Login fehlgeschlagen')
   }
 }
 </script>

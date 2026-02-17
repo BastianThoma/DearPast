@@ -25,6 +25,8 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db, auth } from '@/firebase/config';
+import { useToast } from '@/composables/useToast';
+import { useFirebaseError } from '@/composables/useFirebaseError';
 
 const route = useRoute();
 const router = useRouter();
@@ -34,9 +36,12 @@ const text = ref('');
 const mood = ref('');
 const memoryId = ref(route.params.id);
 
+const { showSuccess, showError } = useToast();
+const { handleFirebaseError } = useFirebaseError();
+
 onMounted(async () => {
   if (!auth.currentUser) {
-    alert('Nicht eingeloggt');
+    showError('Du musst eingeloggt sein!');
     return router.push('/login');
   }
 
@@ -45,7 +50,7 @@ onMounted(async () => {
     const snapshot = await getDoc(docRef);
 
     if (!snapshot.exists()) {
-      alert('Erinnerung nicht gefunden.');
+      showError('Erinnerung nicht gefunden');
       return router.push('/memories');
     }
 
@@ -54,11 +59,31 @@ onMounted(async () => {
     text.value = data.text;
     mood.value = data.mood;
   } catch (err) {
-    console.error('Fehler beim Laden:', err);
-    alert('Fehler beim Laden der Erinnerung.');
+    handleFirebaseError(err, 'Fehler beim Laden der Erinnerung');
     router.push('/memories');
   }
 });
+
+const handleUpdate = async () => {
+  if (!auth.currentUser) {
+    showError('Du musst eingeloggt sein!');
+    return router.push('/login');
+  }
+
+  try {
+    const docRef = doc(db, 'users', auth.currentUser.uid, 'memories', memoryId.value);
+    await updateDoc(docRef, {
+      title: title.value,
+      text: text.value,
+      mood: mood.value,
+    });
+
+    showSuccess('Änderungen gespeichert! ✅');
+    router.push('/memories');
+  } catch (err) {
+    handleFirebaseError(err, 'Fehler beim Aktualisieren');
+  }
+};
 </script>
 
 <style scoped lang="postcss">

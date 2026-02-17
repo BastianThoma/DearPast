@@ -19,14 +19,18 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { auth } from '@/firebase/config'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useToast } from '@/composables/useToast'
+import { useFirebaseError } from '@/composables/useFirebaseError'
 
-let authStore = useAuthStore()
-let username = ref('')
-let email = ref('')
-let password = ref('')
-let router = useRouter()
+const authStore = useAuthStore()
+const username = ref('')
+const email = ref('')
+const password = ref('')
+const router = useRouter()
+const { showSuccess } = useToast()
+const { handleFirebaseError } = useFirebaseError()
 
-let handleRegister = async () => {
+const handleRegister = async () => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
 
@@ -38,9 +42,10 @@ let handleRegister = async () => {
 
     authStore.setUser(auth.currentUser)
 
+    showSuccess('Account erfolgreich erstellt! 🎉')
     router.push('/memories')
   } catch (err) {
-    console.error(err.message)
+    handleFirebaseError(err, 'Registrierung fehlgeschlagen')
   }
 }
 </script>

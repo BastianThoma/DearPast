@@ -16,27 +16,39 @@ import { ref } from 'vue'
 import { collection, getDocs } from 'firebase/firestore'
 import { db, auth } from '@/firebase/config'
 import MemoryCard from '@/components/MemoryCard.vue'
+import { useFirebaseError } from '@/composables/useFirebaseError'
+import { useToast } from '@/composables/useToast'
 
 const loading = ref(false)
 const randomMemory = ref(null)
+const { handleFirebaseError } = useFirebaseError()
+const { showError } = useToast()
 
 const drawRandom = async () => {
   loading.value = true
   randomMemory.value = null
 
-  if (!auth.currentUser) return
-
-  const colRef = collection(db, 'users', auth.currentUser.uid, 'memories')
-  const snapshot = await getDocs(colRef)
-
-  const memories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
-
-  if (memories.length > 0) {
-    const rand = Math.floor(Math.random() * memories.length)
-    randomMemory.value = memories[rand]
+  if (!auth.currentUser) {
+    showError('Du musst eingeloggt sein!')
+    loading.value = false
+    return
   }
 
-  loading.value = false
+  try {
+    const colRef = collection(db, 'users', auth.currentUser.uid, 'memories')
+    const snapshot = await getDocs(colRef)
+
+    const memories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+
+    if (memories.length > 0) {
+      const rand = Math.floor(Math.random() * memories.length)
+      randomMemory.value = memories[rand]
+    }
+  } catch (err) {
+    handleFirebaseError(err, 'Fehler beim Laden')
+  } finally {
+    loading.value = false
+  }
 }
 
 drawRandom()

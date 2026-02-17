@@ -38,11 +38,15 @@ import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db, auth } from '@/firebase/config';
 import { onAuthStateChanged } from 'firebase/auth';
 import MemoryCard from '@/components/MemoryCard.vue';
+import { useFirebaseError } from '@/composables/useFirebaseError';
 
 const memories = ref([]);
 const loading = ref(true);
 const searchQuery = ref('');
 const sortOrder = ref('desc');
+
+const { handleFirebaseError } = useFirebaseError();
+
 const resetFilters = () => {
   searchQuery.value = '';
   sortOrder.value = 'desc';
@@ -70,6 +74,7 @@ const fetchMemories = async () => {
     loading.value = false;
   } catch (error) {
     console.error('Fehler beim Laden:', error);
+    handleFirebaseError(error, 'Fehler beim Laden der Erinnerungen');
     loading.value = false;
   }
 };

@@ -35,6 +35,8 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { doc, deleteDoc } from 'firebase/firestore'
 import { db, auth } from '@/firebase/config'
+import { useToast } from '@/composables/useToast'
+import { useFirebaseError } from '@/composables/useFirebaseError'
 
 const props = defineProps({
   memory: Object,
@@ -42,6 +44,8 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const { showSuccess, showError } = useToast()
+const { handleFirebaseError } = useFirebaseError()
 
 const editMemory = () => {
   router.push({
@@ -54,7 +58,7 @@ const editMemory = () => {
 
 const confirmDelete = async () => {
   if (!props.memory.id || !auth.currentUser) {
-    alert('Fehler: Erinnerung oder Benutzer nicht gefunden.')
+    showError('Fehler: Erinnerung oder Benutzer nicht gefunden')
     return
   }
 
@@ -71,12 +75,12 @@ const confirmDelete = async () => {
     )
     await deleteDoc(docRef)
 
-    alert('Erinnerung gelöscht.')
+    showSuccess('Erinnerung gelöscht ✅')
 
     if (props.onSave) props.onSave()
   } catch (err) {
     console.error('Löschen fehlgeschlagen:', err)
-    alert('Konnte die Erinnerung nicht löschen.')
+    handleFirebaseError(err, 'Konnte die Erinnerung nicht löschen')
   }
 }
 

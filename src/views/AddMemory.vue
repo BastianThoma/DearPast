@@ -26,28 +26,40 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 import { auth } from '@/firebase/config'
 import { useRouter } from 'vue-router'
+import { useToast } from '@/composables/useToast'
+import { useFirebaseError } from '@/composables/useFirebaseError'
 
-let title = ref('')
-let text = ref('')
-let mood = ref('')
-let router = useRouter()
+const title = ref('')
+const text = ref('')
+const mood = ref('')
+const router = useRouter()
+const { showSuccess, showError } = useToast()
+const { handleFirebaseError } = useFirebaseError()
 
-let handleSubmit = async () => {
-  if (!auth.currentUser) return alert('Nicht eingeloggt')
+const handleSubmit = async () => {
+  if (!auth.currentUser) {
+    showError('Du musst eingeloggt sein!')
+    return router.push('/login')
+  }
 
-  let refCol = collection(db, 'users', auth.currentUser.uid, 'memories')
-  await addDoc(refCol, {
-    title: title.value,
-    text: text.value,
-    mood: mood.value,
-    createdAt: serverTimestamp()
-  })
+  try {
+    const refCol = collection(db, 'users', auth.currentUser.uid, 'memories')
+    await addDoc(refCol, {
+      title: title.value,
+      text: text.value,
+      mood: mood.value,
+      createdAt: serverTimestamp()
+    })
 
-  title.value = ''
-  text.value = ''
-  mood.value = ''
+    title.value = ''
+    text.value = ''
+    mood.value = ''
 
-  router.push('/memories')
+    showSuccess('Erinnerung gespeichert! ✨')
+    router.push('/memories')
+  } catch (err) {
+    handleFirebaseError(err, 'Fehler beim Speichern')
+  }
 }
 </script>
 
